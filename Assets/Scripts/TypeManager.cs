@@ -34,16 +34,26 @@ public class TypeManager : MonoBehaviour
         if (typeNumber >= phraseSet.Count) return;
 
         string input = Input.inputString;
+        /*
         if (Input.GetKeyDown(KeyCode.Return)) Confirm();
         if (Input.GetKeyDown(KeyCode.Backspace)) {
             if (typeString.Length > 0) BackSpace();
             return;
-        }
+        }*/
         if (input.Equals("")) return; // if we are not typing stops this function
 
         char c = input[0];
-        typeString += c;
-        typeText.text = typeString;
+
+        if (c == "\b"[0]) {
+            BackSpace();
+        }
+        else if (c == "\n"[0] || c == "\r"[0]) {
+            Confirm();
+        }
+        else {
+            typeString += c;
+            typeText.text = typeString;
+        }
     }
 
     //入力を確定
@@ -94,13 +104,14 @@ public class TypeManager : MonoBehaviour
 
 
         Debug.Log(str + "^^^" + phraseSet[typeNumber]);
+        Debug.Log(str.Equals(phraseSet[typeNumber]) + "-" + str + "-" + phraseSet[typeNumber] + "-");
         //-------
 
 
-        if (/*str.Equals(phraseSet[typeNumber])*/str == phraseSet[typeNumber]) {
+        if (str.Equals(phraseSet[typeNumber])) {
             Debug.Log("Correct");
         }
-        else if (!str.Equals(phraseSet[typeNumber])) {
+        else {
             totalLevenDistance += ComputeLevenshteinDistance(str, phraseSet[typeNumber]);
             Debug.Log("Not Correct");
         }
