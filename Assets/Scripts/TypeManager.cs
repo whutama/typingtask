@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class TypeManager : MonoBehaviour
 {
-    [SerializeField] private List<string> basePhrases;
     private string typeString = "";
     private List<string> phraseSet;
     private int typeNumber = 0;
@@ -24,7 +23,10 @@ public class TypeManager : MonoBehaviour
 
     private void Start()
     {
-        phraseSet = RandomSort(basePhrases);
+        //phraseSet = RandomSort(basePhrases);
+        var pManager = GameObject.Find("Manager").GetComponent<PhraseManager>();
+        phraseSet = pManager.LoadPhrases();
+
         SetPhrase();
         sw.Start();
     }
@@ -34,12 +36,7 @@ public class TypeManager : MonoBehaviour
         if (typeNumber >= phraseSet.Count) return;
 
         string input = Input.inputString;
-        /*
-        if (Input.GetKeyDown(KeyCode.Return)) Confirm();
-        if (Input.GetKeyDown(KeyCode.Backspace)) {
-            if (typeString.Length > 0) BackSpace();
-            return;
-        }*/
+
         if (input.Equals("")) return; // if we are not typing stops this function
 
         char c = input[0];
@@ -72,7 +69,7 @@ public class TypeManager : MonoBehaviour
             sw.Stop();
             countText.text = "Finish";
 
-            wpmText.text = "WPM" + (30 * 60) / (sw.ElapsedMilliseconds / 1000);
+            wpmText.text = "WPM" + (10 * 60) / (sw.ElapsedMilliseconds / 1000);
             erText.text = "Error:" + totalLevenDistance;
         }
     }
@@ -89,21 +86,12 @@ public class TypeManager : MonoBehaviour
         //--------
         string st = "";
         StringBuilder buf = new StringBuilder(str.Length);
-        /*if (typeNumber != 0) {
-            foreach(char c in str) {
-                if (!char.IsControl(c)) buf.Append(c);
-            }
-            st = buf.ToString();
-        }*/
+
         foreach (char c in str) {
             if (!char.IsControl(c)) buf.Append(c);
         }
         st = buf.ToString();
-        Debug.Log("-" + str.First() + "-");
-        Debug.Log(st + "<" + st.Length + "-" + phraseSet[typeNumber].Length);
 
-
-        Debug.Log(str + "^^^" + phraseSet[typeNumber]);
         Debug.Log(str.Equals(phraseSet[typeNumber]) + "-" + str + "-" + phraseSet[typeNumber] + "-");
         //-------
 
