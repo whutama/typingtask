@@ -12,6 +12,7 @@ public class TypeManager : MonoBehaviour
     private int typeNumber = 0;
     private int totalLength = 30;
     private int totalLevenDistance = 0;
+    private int totalInputAmount = 0;
 
     public Text typeText;
     public Text phraseText;
@@ -50,6 +51,7 @@ public class TypeManager : MonoBehaviour
         else {
             typeString += c;
             typeText.text = typeString;
+            totalInputAmount++;
         }
     }
 
@@ -69,7 +71,7 @@ public class TypeManager : MonoBehaviour
             sw.Stop();
             countText.text = "Finish";
 
-            wpmText.text = "WPM" + (10 * 60) / (sw.ElapsedMilliseconds / 1000);
+            wpmText.text = "WPM" + ((totalInputAmount / 5) * 60) / (sw.ElapsedMilliseconds / 1000);
             erText.text = "Error:" + totalLevenDistance;
         }
     }
