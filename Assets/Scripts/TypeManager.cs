@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,7 @@ public class TypeManager : MonoBehaviour
     public Text countText;
     public Text wpmText;
     public Text erText;
+    public StartUI startUi;
 
     System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
@@ -28,8 +30,16 @@ public class TypeManager : MonoBehaviour
         var pManager = GameObject.Find("Manager").GetComponent<PhraseManager>();
         phraseSet = pManager.LoadPhrases();
 
-        SetPhrase();
-        sw.Start();
+        startUi.IsAcctive
+            .Subscribe(_ =>
+            {
+                countText.text = "start";
+                SetPhrase();
+                sw.Start();
+            }).AddTo(this);
+
+        //SetPhrase();
+        //sw.Start();
     }
 
     void Update()
