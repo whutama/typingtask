@@ -14,12 +14,14 @@ public class TypeManager : MonoBehaviour
     private int totalLength = 30;
     private int totalLevenDistance = 0;
     private int totalInputAmount = 0;
+    private bool isFirstInput = false;
 
     public Text typeText;
     public Text phraseText;
     public Text countText;
     public Text wpmText;
     public Text erText;
+    public Text firstText;
     public StartUI startUi;
 
     System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
@@ -62,6 +64,13 @@ public class TypeManager : MonoBehaviour
             typeString += c;
             typeText.text = typeString;
             totalInputAmount++;
+
+            if (!isFirstInput) {
+                if (c.Equals(phraseSet[0].ToCharArray()[0])) {
+                    isFirstInput = true;
+                    firstText.text = "FirstTime:" + ((double)sw.ElapsedMilliseconds / 1000);
+                }
+            }
         }
     }
 
@@ -81,7 +90,7 @@ public class TypeManager : MonoBehaviour
             sw.Stop();
             countText.text = "Finish";
 
-            wpmText.text = "WPM" + ((totalInputAmount / 5) * 60) / (sw.ElapsedMilliseconds / 1000);
+            wpmText.text = "WPM" + ((totalInputAmount / 5) * 60) / ((double)sw.ElapsedMilliseconds / 1000);
             erText.text = "Error:" + totalLevenDistance;
         }
     }
@@ -112,7 +121,7 @@ public class TypeManager : MonoBehaviour
             Debug.Log("Correct");
         }
         else {
-            totalLevenDistance += ComputeLevenshteinDistance(str, phraseSet[typeNumber]);
+            totalLevenDistance += CalculateLevenshteinDistance(str, phraseSet[typeNumber]);
             Debug.Log("Not Correct");
         }
         typeNumber++;
@@ -140,7 +149,7 @@ public class TypeManager : MonoBehaviour
         return Math.Min(Math.Min(x, y), z);
     }
     //レーベンシュタイン距離で誤差率求める
-    private static int ComputeLevenshteinDistance(string strX, string strY)
+    private static int CalculateLevenshteinDistance(string strX, string strY)
     {
         if (strX == null)
             throw new ArgumentNullException("strX");

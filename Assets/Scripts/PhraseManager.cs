@@ -31,18 +31,7 @@ public class PhraseManager : MonoBehaviour
         string[] phrases = File.ReadAllLines(androidPath);
 
         //return RandomSort(resultString.Replace("\r\n", "\n").Split(new[] { '\n', '\r' }).ToArray()).Take(5).ToList();
-        return RandomSort(phrases).Take(5).ToList();
+        //Take内の数字文フレーズを取得
+        return RandomSort(phrases).Take(10).ToList();
     }
-
-    /*
-    public IEnumerator PathManage(string filePath)
-    {
-        if (filePath.Contains("://")) {
-            UnityWebRequest www = UnityWebRequest.Get(filePath);
-            yield return www.SendWebRequest();
-            resultString = www.downloadHandler.text;
-        }
-        else
-            resultString = System.IO.File.ReadAllText(filePath);
-    }*/
 }
