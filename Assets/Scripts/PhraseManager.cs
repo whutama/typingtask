@@ -17,7 +17,7 @@ public class PhraseManager : MonoBehaviour
     //TextAssetをString配列に変換
     public string[] ChangeStringArray(TextAsset textAsset)
     {
-        return textAsset.text.Replace("\r\n", "\n").Split(new[] { '\n', '\r' });
+        return textAsset.text.ToLower().Replace("\r\n", "\n").Split(new[] { '\n', '\r' });
     }
 
     public List<string> LoadPhrases()
@@ -32,6 +32,6 @@ public class PhraseManager : MonoBehaviour
 
         //return RandomSort(resultString.Replace("\r\n", "\n").Split(new[] { '\n', '\r' }).ToArray()).Take(5).ToList();
         //Take内の数字文フレーズを取得
-        return RandomSort(phrases).Take(10).ToList();
+        return RandomSort(phrases).Take(5).ToList();
     }
 }

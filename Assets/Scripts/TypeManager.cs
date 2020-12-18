@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UniRx;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TypeManager : MonoBehaviour
@@ -12,8 +13,9 @@ public class TypeManager : MonoBehaviour
     private List<string> phraseSet;
     private int typeNumber = 0;
     private int totalLength = 30;
-    private int totalLevenDistance = 0;
+    private double totalLevenDistance = 0;
     private int totalInputAmount = 0;
+    private double totalPhraseTextAmount = 0;
     private bool isFirstInput = false;
 
     public Text typeText;
@@ -23,11 +25,14 @@ public class TypeManager : MonoBehaviour
     public Text erText;
     public Text firstText;
     public StartUI startUi;
+    public Button titleButton;
 
     System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
     private void Start()
     {
+        titleButton.gameObject.SetActive(false);
+
         //phraseSet = RandomSort(basePhrases);
         var pManager = GameObject.Find("Manager").GetComponent<PhraseManager>();
         phraseSet = pManager.LoadPhrases();
@@ -90,8 +95,15 @@ public class TypeManager : MonoBehaviour
             sw.Stop();
             countText.text = "Finish";
 
-            wpmText.text = "WPM" + ((totalInputAmount / 5) * 60) / ((double)sw.ElapsedMilliseconds / 1000);
-            erText.text = "Error:" + totalLevenDistance;
+            var wpm = ((totalInputAmount / 5) * 60) / ((double)sw.ElapsedMilliseconds / 1000);
+            wpmText.text = "WPM" + string.Format("{0:f5}", wpm);
+            //修正エラー率求める
+            erText.text = "ER:" + totalLevenDistance + ", PA:" + totalPhraseTextAmount;
+
+            titleButton.gameObject.SetActive(true);
+
+            var sPresenter = GameObject.Find("ScoreCanvas").GetComponent<ScorePresenter>();
+            sPresenter.AddScoreText(firstText.text + "\r\n" + wpmText.text + "\r\n" + erText.text + "\r\n");
         }
     }
 
@@ -104,6 +116,9 @@ public class TypeManager : MonoBehaviour
     //正誤判定
     public void CheckError(string str)
     {
+        //フレーズの文字数足してく
+        totalPhraseTextAmount += phraseSet[typeNumber].Length;
+
         //--------
         string st = "";
         StringBuilder buf = new StringBuilder(str.Length);
@@ -116,8 +131,7 @@ public class TypeManager : MonoBehaviour
         Debug.Log(str.Equals(phraseSet[typeNumber]) + "-" + str + "-" + phraseSet[typeNumber] + "-");
         //-------
 
-
-        if (str.Equals(phraseSet[typeNumber])) {
+        if (str.Equals(phraseSet[typeNumber].ToLower())) {
             Debug.Log("Correct");
         }
         else {
@@ -125,13 +139,15 @@ public class TypeManager : MonoBehaviour
             Debug.Log("Not Correct");
         }
         typeNumber++;
+
+        //レーベンシュタイン距離のみ
         erText.text = "Error:" + totalLevenDistance;
     }
 
     //フレーズを変更する
     public void SetPhrase()
     {
-        phraseText.text = phraseSet[typeNumber];
+        phraseText.text = phraseSet[typeNumber].ToLower();
         countText.text = typeNumber.ToString();
     }
 
@@ -185,4 +201,36 @@ public class TypeManager : MonoBehaviour
         return d[strX.Length, strY.Length];
     }
     //---
+
+    public void OnKeyDown(GameObject kb)
+    {
+        if (typeNumber >= phraseSet.Count) return;
+
+        char c = kb.name.ToCharArray()[0];
+
+        if (kb.name == "BACKSPACE") {
+            BackSpace();
+        }
+        else if (kb.name == "ENTER") {
+            Confirm();
+        }
+        else {
+            typeString += c;
+            typeText.text = typeString;
+            totalInputAmount++;
+
+            if (!isFirstInput) {
+                if (c.Equals(phraseSet[0].ToCharArray()[0])) {
+                    isFirstInput = true;
+                    firstText.text = "FirstTime:" + ((double)sw.ElapsedMilliseconds / 1000);
+                }
+            }
+        }
+    }
+
+    public void LoadTitleScene()
+    {
+        Scene loadScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(loadScene.name);
+    }
 }
