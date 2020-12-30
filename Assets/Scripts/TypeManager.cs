@@ -27,6 +27,8 @@ public class TypeManager : MonoBehaviour
     public StartUI startUi;
     public Button titleButton;
 
+    public GameObject phraseBox;
+
     System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
     private void Start()
@@ -41,6 +43,10 @@ public class TypeManager : MonoBehaviour
             .Subscribe(_ =>
             {
                 countText.text = "start";
+                if (phraseBox != null)
+                {
+                    phraseBox.SetActive(true);
+                }
                 SetPhrase();
                 sw.Start();
             }).AddTo(this);
