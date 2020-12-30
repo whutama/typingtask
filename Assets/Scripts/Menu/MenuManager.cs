@@ -38,13 +38,13 @@ public class MenuManager : MonoBehaviour
         switch (type)
         {
             case TaskType.Practice:
-                SceneManager.LoadScene("Practice");
+                SceneManager.LoadScene("Test2");
                 break;
             case TaskType.PrimaryTask:
                 SceneManager.LoadScene("Test1");
                 break;
             case TaskType.SecondaryTask:
-                SceneManager.LoadScene("SampleScene");
+                SceneManager.LoadScene("Test3");
                 break;
             default:
                 break;

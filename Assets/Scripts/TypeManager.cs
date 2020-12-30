@@ -230,7 +230,8 @@ public class TypeManager : MonoBehaviour
 
     public void LoadTitleScene()
     {
-        Scene loadScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(loadScene.name);
+        //Scene loadScene = SceneManager.GetActiveScene();
+        //SceneManager.LoadScene(loadScene.name);
+        SceneManager.LoadScene("Menu");
     }
 }
