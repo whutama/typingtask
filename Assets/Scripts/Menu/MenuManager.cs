@@ -41,7 +41,7 @@ public class MenuManager : MonoBehaviour
                 SceneManager.LoadScene("Test2");
                 break;
             case TaskType.PrimaryTask:
-                SceneManager.LoadScene("SampleScene");
+                SceneManager.LoadScene("Test1");
                 break;
             case TaskType.SecondaryTask:
                 SceneManager.LoadScene("Test4");
